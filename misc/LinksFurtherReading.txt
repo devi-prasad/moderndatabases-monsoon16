@@ -1,3 +1,7 @@
 
 
 http://www.allthingsdistributed.com/
+
+https://www.facebook.com/notes/facebook-engineering/scaling-apache-giraph-to-a-trillion-edges/10151617006153920
+
+https://blog.acolyer.org/2015/05/26/pregel-a-system-for-large-scale-graph-processing/
