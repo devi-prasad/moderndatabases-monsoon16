@@ -1,0 +1,46 @@
+
+Performance Comparison.
+Importing Data into MongoDB and MySQL Databases.
+-------------------------------------------------
+
+1. Data Source for the Experiment
+   -------------------------------
+The World Health Organization (WHO) regularly generates estimates of TB burden 
+for the Global Tuberculosis Report. WHO makes this data available for download 
+as comma separated value (CSV) files. The Web page at the following URL 
+provides access to this data:
+    http://www.who.int/tb/country/data/download/en/
+
+You may download WHO TB burden estimates [1.1Mb] from
+    https://extranet.who.int/tme/generateCSV.asp?ds=estimates
+
+The first row in each CSV file contains variable names. You can find the 
+definition of each variable in the data dictionary:
+    https://extranet.who.int/tme/generateCSV.asp?ds=dictionary
+
+
+2. Details of the Experiment
+   --------------------------
+This assignment requires you to carry out a two-part experiment.
+
+(A)
+Install the recent version of MongoDB, and import the WHO TB burden 
+estimates as MongoDB documents. Measure the performance of this operation and 
+record the readings across multiple runs in at least four different 
+workstations.
+
+(B)
+Install the recent version of MySQL and and import the WHO TB burden 
+estimates into a table. Measure the performance of this operation and record 
+the readings across multiple runs in at least four different workstations.
+
+Use the same programming language (either Python or Java) to carry out both 
+(A) and (B). 
+
+
+3. Drawing conclusions and Insights
+   ---------------------------------
+(1) What do the results obtained in this experiment suggest? Do these results
+    match with your hypothesis or your views?
+(2) Will the same results hold if the data size is increased by three times?
+
