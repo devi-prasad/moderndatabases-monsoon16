@@ -1,0 +1,30 @@
+Cooperative Termination Protocol
+
+A cohort recovers from a failure is that the cohort logged a prepared record, but did not log a committed or aborted record.
+
+The cohort can find out the decision from the coordinator, if it is alive. If not, it can avoid waiting for the coordinator to recover by using the cooperative termination protocol, which asks for help from other participants.
+
+The cooperative termination protocol requires that each cohort knows the addresses of the its cohorts, so that it can contact them if it is blocked during recovery.
+	It needs to get this information from the coordinator in the PREPARE message.
+
+The cohort P sends a DECISION-REQUEST message to the other participants.
+
+When a cohort Q receives a DECISION-REQUEST, it responds as follows:
+	If it knows what the decision was (i.e., it got a COMMIT or ABORT from the coordinator), then it replies with the decision (COMMIT or ABORT).
+	If it did not prepare the transaction, it replies ABORT .
+	If it prepared, but does not know what the decision was, then it replies UNCERTAIN. This is the bad case that doesn’t help cohort P.
+
+If any cohort replies with a decision, then P acts on the decision and sends the decision to every cohort that replied UNCERTAIN, since they want to know the decision too.
+
+--------
+If cohorts are allowed to run the cooperative termination protocol, then it may not be a good idea for them to forget the decision shortly after they receive it from the coordinator. 
+	Each cohort can simply hold on to each decision for some fixed amount of time, such as one minute, before discarding it.
+
+Second, we could add a fifth round of messages from the coordinator to the participants, after the coordinator receives DONE from all the participants. 
+
+This final message from the coordinator tells the participants that they can forget the   decision, since all other participants know the decision and will not need to run the cooperative termination protocol after a failure.
+---------
+
+When cohort P recovers, the coordinator is down. So cohort P asks other
+participants what the decision was (via DECISION-REQUEST ). Other participants, such as cohort Q, reply with a DECISION-REPLY containing COMMIT, ABORT, or UNCERTAIN . If cohort P learns the decision from some cohort, then it sends a decision message to each cohort that replied UNCERTAIN in the previous round.
+

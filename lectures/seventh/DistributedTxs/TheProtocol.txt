@@ -1,0 +1,41 @@
+The Protocol
+
+Phase 1
+
+To commit the transaction, the coordinator starts by sending a PREPARE message to each participant.
+
+The coordinator waits for all participants to “vote” on the request.
+
+In response to receiving a PREPARE message, each participant votes by sending a message back to the coordinator, as follows:
+	It votes PREPARED if it is prepared to commit.
+
+It may vote NO for any reason, usually because it cannot prepare the transaction due to a local failure.
+
+It may delay voting indefinitely, for example, because its system is overburdened with other work or because it failed.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Phase 2
+
+If the coordinator receives PREPARED messages from all participants, it decides to commit. 
+	The transaction is now officially committed. 
+	Otherwise, it either received a NO message or gave up waiting for some participant, so it decides to abort.
+
+The coordinator sends its decision to all participants - COMMIT or ABORT.
+
+Participants acknowledge receipt of the commit or abort by replying DONE.
+	After receiving DONE from all participants, the coordinator can forget the transaction.
+	It can deallocate any memory it was using to keep track of information about the transaction.

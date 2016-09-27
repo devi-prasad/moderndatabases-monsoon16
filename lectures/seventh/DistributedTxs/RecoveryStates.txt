@@ -1,0 +1,36 @@
+Recovery States
+
+Now that we know what information they log, we can look at how the coordinator and cohort recover from failures. When it recovers it can be in one of four states - see numbered boxes on left side of Figure 2.
+
+Consider the coordinator. 
+
+It has no start-two-phase-commit log record for the transaction. 
+	It did not start two-phase commit before the failure.
+	So no participant could have received a PREPARE message and therefore all of them either aborted unilaterally while the coordinator was down, or will abort on their own later (if the coordinator was down only briefly).
+
+It has a start-two-phase-commit record only, so it did not reach a decision before the failure. It aborts the transaction.
+	It is possible that participants are waiting for this decision, so it sends an abort decision message to all of them.
+	Some of them may ignore the message, because they never got a PREPARE message and therefore unilaterally aborted, but there is no harm in sending the abort decision message.
+
+It has a commit or abort record in the log, but no DONE record. 
+	Again, it is possible that participants are waiting for this decision, so it sends a decision message to all of them.
+
+It has a DONE record in the log.
+	All participants acknowledged receiving the decision, so there is nothing to do.
+
+
+
+
+Now, consider a participant. 
+
+When it recovers it can be in one of three states (see numbered boxes on right side of Figure 2.
+
+It did not log a prepared record.
+	The transaction could not have committed, so the participant unilaterally aborts the transaction.
+
+It logged a prepared record, but did not log a committed or aborted record. This is the bad case, where the participant is blocked. 
+	It should run a termination protocol, which we will see shortly.
+
+It logged the decision, COMMIT, or ABORT.
+	It can either send another DONE message, or it can wait until the coordinator sends it a reminder message, reminding it of the decision, at which time it sends a DONE message.
+

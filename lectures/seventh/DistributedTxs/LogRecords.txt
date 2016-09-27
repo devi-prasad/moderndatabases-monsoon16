@@ -1,0 +1,23 @@
+Log Records
+
+The coordinator needs to write three log records - see Figure 1. 
+----------------------------------------------------------------
+
+Before it sends a PREPARE, it should log a start-two-phase-commit record, which includes a list of the participants.
+
+Before sending a commit decision, it should log a commit record.
+
+	Writing the commit record to the log is what actually commits the transaction.
+	Otherwise, if the coordinator failed after sending the COMMIT message and before flushing the commit record to the log, and it subsequently recovered, it would abort the transaction during its recovery procedure, which produces an inconsistent outcome if the participant that received the COMMIT message committed.
+
+After it receives the DONE messages it writes a done record, which records the fact that the transaction is finished. This could be lazily written.
+
+
+
+The participant writes two log records, see Figure 1.
+------------------------------------------------------
+When it gets a PREPARE from the coordinator, it writes a prepared record to the log. 
+	This is eager - it waits until the prepared record is in the stable log before sending PREPARED to the coordinator.
+
+It writes a commit record or abort record, after it receives the decision message. This too is eager.
+

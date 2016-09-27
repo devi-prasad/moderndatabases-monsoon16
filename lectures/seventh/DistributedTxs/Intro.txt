@@ -1,0 +1,15 @@
+Introduction
+
+A cohort that processed some of T’s updates fails after T has been committed at another cohort.
+
+A cohort that failed while T was committing has now recovered and wants to find out whether T committed or recovered. 
+	How does it know who to ask? 
+	What should it do if none of the other cohort that processed T’s operations are up and running?
+
+What if a cohort R is not responding to messages?
+	Should other cohorts assume R is down, and therefore its active transactions will abort, or 
+	that communications is down and R is still operational?
+
+As in DBMS recovery, application programmers usually do not get involved in two-phase commit.
+	Most database systems and transactional middleware support it and make it transparent to the application.
+

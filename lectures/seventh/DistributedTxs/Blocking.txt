@@ -1,0 +1,31 @@
+Blocking
+
+Before a participant votes, it can abort unilaterally, any time it wants. 
+
+Once it sends PREPARED, and until it receives a message containing the coordinator’s decision, it is unable to commit or abort. 
+	During this period, it is said to be uncertain.
+
+The coordinator is never uncertain, because it gets to decide. 
+	Until it decides, it can abort whenever it wants.
+	After it decides, it is obviously not uncertain.
+	So, only participants are uncertain.
+
+If the coordinator fails while a participant is uncertain, the participant is blocked
+	Participant can neither commit nor abort.
+	The coordinator could be down for a long time. 
+	This is a bad situation for the participant, since it is holding locks on data that the transaction accessed.
+
+
+Theorem
+--------
+For every possible commit protocol (not just two-phase commit), a communications failure can cause a participant to become blocked.
+
+If a participant fails while it is uncertain, and subsequently recovers, it is possible that when it recovers the coordinator is down. 
+	In this case, it is still uncertain and therefore cannot completely recover, since it doesn’t know whether to commit or abort the transaction.
+	That is, the participant cannot independently recover. 
+	Like blocking, this too is unavoidable.
+
+Theorem
+--------
+No commit protocol can guarantee independent recovery of failed participants.
+

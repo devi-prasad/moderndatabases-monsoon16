@@ -1,0 +1,19 @@
+Two Phase Commit Protocol
+
+The protocol makes the following assumptions about each transaction T:
+	
+	Transaction T accesses resources from time to time. If it terminates normally without any errors, it issues a commit.
+	
+	If it experiences a serious error at any time, such as a deadlock or illegal operation, it issues an abort operation.
+	
+	In response to the commit, the system runs the two-phase commit protocol.
+	
+	Each cohort has a transaction recovery system
+
+	One and only one program issues the commit operation on T.
+		In some cases, a second attempt to run two-phase commit while the first attempt is still running will cause the protocol to break
+
+	The protocol does not make mistakes when a system or a cohort malfunctions.
+		It either does exactly what the protocol says it should do, or it stops running.
+
+	    It is possible for a failure to cause the protocol to do something that is inconsistent with its specification, such as sending bogus messages. These are called Byzantine failures.

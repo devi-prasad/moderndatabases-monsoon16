@@ -1,0 +1,29 @@
+Failure Handling
+
+The purpose of two-phase commit is to cope with the various failures that can arise. To complete the description of the protocol we need to explain what happens in every possible failure situation.
+
+We assume that all failures of messages and processes are detected by timeout. That is, a caller sets a timer when it sends a message to another process and assumes that a failure has occurred if the timer expires before it receives the reply it was expecting. The length of the timer is called the timeout period.
+
+To analyze the failure cases, we will walk through the protocol from both the coordinator’s and participant’s viewpoint and explain what happens in each case where a message was expected but does not arrive.
+
+Coordinator’s view
+-------------------
+Send PREPARE messages to all the participants.
+	Error handling: None, since it is not expecting any messages in this step.
+
+Receive PREPARED messages from all participants, or receive a NO message from at least one participant.
+	Error handling: It is waiting for PREPARED or NO messages. If it does not receive all of them within its timeout period, it can simply abort the transaction, just as if one of the participants had voted NO.
+
+Depending on the messages received, decide to commit or abort.
+	Error handling: None, since it is not expecting any messages in this step.
+
+Send COMMIT or ABORT messages to all participants (depending on the decision).
+	Error handling: None, since it is not expecting any messages in this step.
+
+Receive DONE messages from all participants.
+	Error handling: It is waiting for DONE messages. Nothing important depends on when these messages arrive, so it waits indefinitely for them. If its timeout period expires, it can send reminder messages to the participants to once again solicit the DONE messages.
+
+Forget the transaction.
+	Error handling: None, since it is not expecting any messages in this step.
+
+

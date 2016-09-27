@@ -1,0 +1,9 @@
+Termination Protocol
+
+A termination protocol is what a participant does to try to resolve a blocked transaction when the participant recovers from a failure. 
+
+The simplest termination protocol is to wait until it re-establishes communication with the coordinator and to resend its vote. If the coordinator sees a redundant vote message, this must mean that the participant hasn’t yet received the decision, so it resends the decision.
+
+If communication cannot be re-established in an acceptably short time, then a human operator may need to intervene and guess whether the transaction committed or aborted (perhaps making a telephone call to the operator of the other system to find out the decision).
+
+Repairing an inconsistent decision can be difficult.

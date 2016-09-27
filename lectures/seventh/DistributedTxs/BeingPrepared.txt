@@ -1,0 +1,12 @@
+Being Prepared
+
+
+A participant P is said to be prepared if all of transaction T’s after-images at P are in stable storage.
+	It is essential that T does not commit at any participant until all participants are	 prepared.
+
+
+Ensuring that all participants are prepared before any of them commits is the essence of two-phase commit.
+
+	Phase one is when all participants become prepared. Phase two is when they commit. No participant enters.
+	
+	Phase two until all participants have completed phase one; that is, until all participants are prepared.
