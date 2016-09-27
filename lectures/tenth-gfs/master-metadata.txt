@@ -1,0 +1,46 @@
+
++----------------------------------------------+---------------+-------------+
+|      Persistent Metadata of the Server       |               |             |
+|------|-------------------|-------|-----------+---------------+-------------+
+| App  |    File Name      | Chunk |  Chunk    | Chunk Servers | Checkpoint  |
+|      |                   | Index |  Handle   | (replicas)    |             |
+|      |                   |       | (unique)  |               |             |
+|------+-------------------+-------+-----------+---------------+-------------|
+| AppX | /logs/appx/f1.log |       |           |               |             |
+|      |                   |   0   | #CH-0-f1  | S1, S3, S5    |             | 
+|      |                   |   1   | #CH-1-f1  | S1, S3, S5    |             |
+|      |                   |   2   | #CH-2-f1  | S1, S3, S5    |             |
+|      |                   |   3   | #CH-3-f1  | S1, S3, S5    |  #1         |
+|      |                   |       |           |               |             |
+|      |                   |   4   | #CH-4-f1  | S3, S5, S7    |             |
+|      |                   |   5   | #CH-5-f1  | S3, S5, S7    |  #2         |
+|------+-------------------+-------+-----------+---------------+-------------+
+| AppX | /logs/appx/f2.log |       |           |               |             |
+|      |                   |   0   | #CH-0-f2  | S2, S4, S6    |             |
+|      |                   |   1   | #CH-1-f2  | S2, S4, S6    |  #1         |
+|      |                   |       |           |               |             |
+|      |                   |   2   | #CH-2-f2  | S4, S6, S8    |             |
+|      |                   |   3   | #CH-3-f2  | S4, S6, S8    |  #2         |
+|------+-------------------+-------+-----------+---------------+-------------+
+| AppY | /logs/appy/f3.log |       |           |               |             |
+|      |                   |   0   | #CH-0-f3  | S1, S2, S3    |  #1         |
+|      |                   |       |           |               |             |
+|      |                   |   1   | #CH-1-f3  | S2, S3, S5    |             |
+|      |                   |   2   | #CH-2-f3  | S2, S3, S5    |             |
+|      |                   |   3   | #CH-3-f3  | S2, S3, S5    |             |
+|      |                   |   4   | #CH-4-f3  | S2, S3, S5    |  #2         |
+|      |                   |       |           |               |             |
+|      |                   |   5   | #CH-5-f3  | S3, S4, S5    |             |
+|      |                   |   6   | #CH-6-f3  | S3, S4, S5    |  #3         |
+|------+-------------------+-------+-----------+---------------+-------------+
+
+
+Notes:
+1. There may be more than one instance of an "app" accessing the file.
+   In the table above, for instance, there may be four concurrent instances of
+   AppX and two concurrent instances of AppY accessing (reading and mutating)
+   the file contents.
+
+2. File namespace mutations (e.g., file creation or renaming) are atomic. 
+   They are handled exclusively by the master: namespace locking guarantees 
+   atomicity and correctness.
